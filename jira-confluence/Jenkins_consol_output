@@ -1,0 +1,137 @@
+Branch indexing
+Checking out git git@github.com:YamanOnur/pipeline_scripts.git into /var/jenkins_home/workspace/pia-project_master@script/1f0437784b2290b185326100e122c9556128916664e916cb98d7671ca13af224 to read pia-project/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/pia-project_master@script/1f0437784b2290b185326100e122c9556128916664e916cb98d7671ca13af224/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:YamanOnur/pipeline_scripts.git # timeout=10
+Fetching upstream changes from git@github.com:YamanOnur/pipeline_scripts.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git fetch --tags --force --progress -- git@github.com:YamanOnur/pipeline_scripts.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision aa90414e11b782e35ac7330687a3bcef30c5aeaf (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f aa90414e11b782e35ac7330687a3bcef30c5aeaf # timeout=10
+Commit message: "Update Jenkinsfile"
+ > git rev-list --no-walk de3f8526e97c18f2a6a07f89efe7a85a62a403e1 # timeout=10
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/pia-project_master
+[Pipeline] {
+ > git rev-parse --resolve-git-dir /var/jenkins_home/caches/git-c835d2a3e9227636703026fe9b97c96e/.git # timeout=10
+Setting origin to git@github.com:YamanOnur/pia-project.git
+ > git config remote.origin.url git@github.com:YamanOnur/pia-project.git # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git config --get remote.origin.url # timeout=10
+ > git fetch --tags --force --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/master
+Seen 1 remote branch
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/pia-project_master/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:YamanOnur/pia-project.git # timeout=10
+Fetching without tags
+Fetching upstream changes from git@github.com:YamanOnur/pia-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git fetch --no-tags --force --progress -- git@github.com:YamanOnur/pia-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision b622768e899a2e912b971b8b0455ee78a70ce1b9 (master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f b622768e899a2e912b971b8b0455ee78a70ce1b9 # timeout=10
+Commit message: "updated"
+ > git rev-list --no-walk 80fb67703991c948cdd1b855f06d65133dffd1ee # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Update Pipeline)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts fetch
+From github.com:YamanOnur/pipeline_scripts
+   757c84e..aa90414  master     -> origin/master
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts checkout master
+Already on 'master'
+Your branch is behind 'origin/master' by 3 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts reset --hard origin/master
+HEAD is now at aa90414 Update Jenkinsfile
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Start Docker Compose)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker-compose -f /var/jenkins_home/pipeline_scripts/pia-project/docker-compose.yaml up -d
+Creating network "pia-project_microservices-demo-network" with driver "bridge"
+Creating pia-project_mysql_1 ... 
+Creating pia-project_cartservice_1 ... 
+Creating pia-project_redis-cart_1  ... 
+Creating pia-project_currencyservice_1 ... 
+Creating pia-project_adservice_1       ... 
+Creating pia-project_productcatalogservice_1 ... 
+Creating pia-project_cartservice_1           ... done
+Creating pia-project_redis-cart_1            ... done
+Creating pia-project_mysql_1                 ... done
+Creating pia-project_emailservice_1          ... 
+Creating pia-project_currencyservice_1       ... done
+Creating pia-project_adservice_1             ... done
+Creating pia-project_productcatalogservice_1 ... done
+Creating pia-project_paymentservice_1        ... 
+Creating pia-project_shippingservice_1       ... 
+Creating pia-project_dbcontrolservice_1      ... 
+Creating pia-project_recommendationservice_1 ... 
+Creating pia-project_recommendationservice_1 ... done
+Creating pia-project_paymentservice_1        ... done
+Creating pia-project_shippingservice_1       ... done
+Creating pia-project_emailservice_1          ... done
+Creating pia-project_checkoutservice_1       ... 
+Creating pia-project_dbcontrolservice_1      ... done
+Creating pia-project_checkoutservice_1       ... done
+Creating pia-project_frontend_1              ... 
+Creating pia-project_frontend_1              ... done
+Creating pia-project_loadgenerator_1         ... 
+Creating pia-project_loadgenerator_1         ... done
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply Kubernetes Manifests)
+[Pipeline] fileExists
+Stage "Apply Kubernetes Manifests" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
++ docker-compose down
+Removing network pia-project_master_microservices-demo-network
+Network pia-project_master_microservices-demo-network not found.
+[Pipeline] echo
+Deployment successful!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
