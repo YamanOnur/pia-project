@@ -31,7 +31,7 @@ pipeline {
 
         stage('Apply Kubernetes Manifests') {
             when {
-                expression { fileExists("${pipelineDirectory}/k8s") }  // Only if Kubernetes manifests exist
+                expression { fileExists("${pipelineDirectory}/pia-prject/k8s") }  // Only if Kubernetes manifests exist
             }
             steps {
                 script {
