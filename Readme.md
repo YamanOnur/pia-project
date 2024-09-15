@@ -38,7 +38,7 @@ you may need to manually connect the microservice to the database. Follow these 
 
 - Go to the project directory:
   ```bash
-  kubectl apply -f ./k8s/
+  cd ./pia-project
   
 - To deploy the services on Kubernetes, use the following command:
   ```bash
