@@ -36,6 +36,10 @@ you may need to manually connect the microservice to the database. Follow these 
 
 ## Deploying the Services on Kubernetes
 
+- Go to the project directory:
+  ```bash
+  kubectl apply -f ./k8s/
+  
 - To deploy the services on Kubernetes, use the following command:
   ```bash
   kubectl apply -f ./k8s/
