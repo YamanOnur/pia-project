@@ -30,17 +30,21 @@ pipeline {
         }
 
         stage('Apply Kubernetes Manifests') {
-            when {
-                expression { fileExists("${pipelineDirectory}/pia-prject/k8s") }  // Only if Kubernetes manifests exist
-            }
-            steps {
-                script {
-                    // Apply Kubernetes manifests (if using Kubernetes)
-                    sh "kubectl apply -f ${pipelineDirectory}/pia-project/k8s"
-                }
-            }
+    when {
+        expression {
+            // Check if the directory exists and contains at least one .yaml or .yml file
+            fileExists("${pipelineDirectory}/pia-project/k8s") && 
+            sh(script: "find ${pipelineDirectory}/pia-project/k8s -name '*.yaml' -o -name '*.yml' | grep -q .", returnStatus: true) == 0
         }
     }
+    steps {
+        script {
+            // Apply Kubernetes manifests (if using Kubernetes)
+            sh "kubectl apply -f ${pipelineDirectory}/pia-project/k8s"
+        }
+    }
+}
+
 
     post {
         always {
