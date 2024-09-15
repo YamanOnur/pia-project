@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Start services using docker-compose (builds images if necessary)
-                    sh "docker-compose -f ${pipelineDirectory}/docker-compose.yaml up -d"
+                    sh "docker-compose -f ${pipelineDirectory}/pia-project/docker-compose.yaml up -d"
                 }
             }
         }
