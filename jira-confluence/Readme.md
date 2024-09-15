@@ -28,7 +28,6 @@ This guide outlines the steps to restore Jira & Confluence data from a backup us
 
   ```bash
   docker exec -it jira /bin/bash
-  ```bash
   cd /var/atlassian/application-data/jira/import
   ls
 
@@ -46,6 +45,5 @@ This guide outlines the steps to restore Jira & Confluence data from a backup us
 
   ```bash
   docker exec -it confluence /bin/bash
-  ```bash
   cd /var/atlassian/application-data/confluence/restore/site
   ls
