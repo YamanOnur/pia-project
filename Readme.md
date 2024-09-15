@@ -23,7 +23,7 @@ This is the PIA Project repository.
 In some cases, the microservice may start before the database, which can cause connection issues. To resolve this, 
 you may need to manually connect the microservice to the database. Follow these steps:
 
-First, check the status of the running Docker containers to ensure the database is running:
+- First, check the status of the running Docker containers to ensure the database is running:
   ```bash
   docker ps -a
 
