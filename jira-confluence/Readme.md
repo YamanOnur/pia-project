@@ -8,6 +8,9 @@
 
   ```bash
   docker exec -it postgres-db psql -U admin
+
+- Create database for both jira and confluence
+  
   ```bash
   CREATE DATABASE jiradb;
   CREATE DATABASE confluencedb;
