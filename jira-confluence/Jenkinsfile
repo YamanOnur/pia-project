@@ -1,11 +1,11 @@
-def job_name = "${env.JOB_NAME}".split('/')[0]  // Extract job name
-def branch = "${env.JOB_NAME}".split('/')[1]    // Extract branch
-def pipelineDirectory = "${env.WORKSPACE}/pipeline_scripts"  // Use workspace directory
+def job_name = "${env.JOB_NAME}".split('/')[0]
+def branch = "${env.JOB_NAME}".split('/')[1]
+def pipelineDirectory = "/var/jenkins_home/pipeline_scripts"
 
 pipeline {
     agent any
     options {
-        disableConcurrentBuilds()  // Ensures no parallel builds of the same job
+        disableConcurrentBuilds()
     }
 
     stages {
