@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     // Apply Kubernetes manifests (if using Kubernetes)
-                    sh "kubectl apply -f ${pipelineDirectory}/k8s"
+                    sh "kubectl apply -f ${pipelineDirectory}/pia-project/k8s"
                 }
             }
         }
