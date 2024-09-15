@@ -9,7 +9,6 @@ This is the PIA Project repository.
 - Clone the repository
   ```bash
   git clone https://github.com/YamanOnur/pia-project.git
-  ```bash
   cd ./pia-project
 
 ## Starting the Services
