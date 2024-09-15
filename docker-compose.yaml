@@ -1,0 +1,183 @@
+version: '3.8'
+
+volumes:
+  mysql_data:
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysqldb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      microservices-demo-network:
+
+  adservice:
+    image: gcr.io/google-samples/microservices-demo/adservice:v0.3.9
+    ports:
+      - "9555:9555"
+    networks:
+      microservices-demo-network:
+
+  cartservice:
+    image: gcr.io/google-samples/microservices-demo/cartservice:v0.3.9
+    ports:
+      - "7070:7070"
+    environment:
+      - REDIS_ADDR=redis-cart:6379
+    networks:
+      microservices-demo-network:
+
+  checkoutservice:
+    image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.3.9
+    ports:
+      - "5050:5050"
+    environment:
+      - PAYMENT_SERVICE_ADDR=paymentservice:50051
+      - EMAIL_SERVICE_ADDR=emailservice:8080
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CART_SERVICE_ADDR=cartservice:7070
+    depends_on:
+      - paymentservice
+      - emailservice
+      - currencyservice
+      - shippingservice
+      - productcatalogservice
+      - cartservice
+    networks:
+      microservices-demo-network:
+
+  currencyservice:
+    image: onryaman/currencyservice
+    ports:
+      - "7000:7000"
+    networks:
+      microservices-demo-network:
+
+  emailservice:
+    image: gcr.io/google-samples/microservices-demo/emailservice:v0.3.9
+    ports:
+      - "8082:8080"
+    environment:
+      - MYSQL_HOST=mysql                      # MySQL service name
+      - MYSQL_PORT=3306                       # MySQL default port
+      - MYSQL_DATABASE=emailservice_db        # Database name created earlier
+      - MYSQL_USER=email_user                 # MySQL username
+      - MYSQL_PASSWORD=emailpassword
+    depends_on:
+      - mysql
+    networks:
+      microservices-demo-network:
+
+  frontend:
+    image: gcr.io/google-samples/microservices-demo/frontend:v0.3.9
+    ports:
+      - "8081:8080"
+    environment:
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+      - RECOMMENDATION_SERVICE_ADDR=recommendationservice:8080
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
+      - AD_SERVICE_ADDR=adservice:9555
+    depends_on:
+      - productcatalogservice
+      - currencyservice
+      - cartservice
+      - recommendationservice
+      - shippingservice
+      - checkoutservice
+      - adservice
+    networks:
+      microservices-demo-network:
+
+  paymentservice:
+    image: onryaman/paymentservice
+    ports:
+      - "50051:50051"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=paymentservice_db
+      - MYSQL_USER=payment_user
+      - MYSQL_PASSWORD=paymentpassword
+    depends_on:
+      - mysql
+    networks:
+      microservices-demo-network:
+
+  productcatalogservice:
+    image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.3.9
+    ports:
+      - "3550:3550"
+    networks:
+      microservices-demo-network:
+
+  recommendationservice:
+    image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.3.9
+    ports:
+      - "8083:8080"
+    environment:
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+    depends_on:
+      - productcatalogservice
+    networks:
+      microservices-demo-network:
+
+  shippingservice:
+    image: gcr.io/google-samples/microservices-demo/shippingservice:v0.3.9
+    ports:
+      - "50053:50051"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=shippingservice_db
+      - MYSQL_USER=shipping_user
+      - MYSQL_PASSWORD=shippingpassword
+    depends_on:
+      - mysql
+    networks:
+      microservices-demo-network:
+
+  redis-cart:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      microservices-demo-network:
+
+  loadgenerator:
+    image: gcr.io/google-samples/microservices-demo/loadgenerator:v0.3.9
+    depends_on:
+      - frontend
+    environment:
+      - FRONTEND_ADDR=frontend:8080
+    networks:
+      microservices-demo-network:
+
+  dbcontrolservice:
+    image: onryaman/dbcontrolservice
+    ports:
+      - "5000:5000"
+      - "50055:50055" # gRPC port
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=dbcontrolservice_db
+      - MYSQL_USER=root                       # Use root user
+      - MYSQL_PASSWORD=rootpassword
+    depends_on:
+      - mysql
+    networks:
+      microservices-demo-network:
+
+networks:
+  microservices-demo-network:
+    driver: bridge

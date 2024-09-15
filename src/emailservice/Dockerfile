@@ -1,0 +1,52 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Base image with Python 3.12.5-slim
+FROM python:3.12.5-slim@sha256:59c7332a4a24373861c4a5f0eec2c92b87e3efeb8ddef011744ef9a751b1d11c AS base
+
+# Builder stage to install dependencies
+FROM base AS builder
+
+# Update and install necessary build dependencies
+RUN apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
+        wget g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages from requirements.txt
+COPY requirements.txt . 
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Production stage
+FROM base
+
+# Enable unbuffered logging
+ENV PYTHONUNBUFFERED=1
+# Enable Profiler
+ENV ENABLE_PROFILER=1
+
+# Set the working directory
+WORKDIR /email_server
+
+# Copy installed Python packages from builder
+COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
+
+# Copy application source code to the container
+COPY . /email_server
+
+# Expose the port that the service runs on
+EXPOSE 8080
+
+# Set the entrypoint to run the email server
+ENTRYPOINT [ "python", "email_server.py" ]

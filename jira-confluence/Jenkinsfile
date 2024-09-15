@@ -1,0 +1,57 @@
+def job_name = "${env.JOB_NAME}".split('/')[0]  // Extract job name
+def branch = "${env.JOB_NAME}".split('/')[1]    // Extract branch
+def pipelineDirectory = "${env.WORKSPACE}/pipeline_scripts"  // Use workspace directory
+
+pipeline {
+    agent any
+    options {
+        disableConcurrentBuilds()  // Ensures no parallel builds of the same job
+    }
+
+    stages {
+        stage('Update Pipeline') {
+            steps {
+                script {
+                    // Fetch the latest changes in pipeline scripts
+                    sh "git -C ${pipelineDirectory} fetch"
+                    sh "git -C ${pipelineDirectory} checkout ${branch}"
+                    sh "git -C ${pipelineDirectory} reset --hard origin/${branch}"
+                }
+            }
+        }
+
+        stage('Start Docker Compose') {
+            steps {
+                script {
+                    // Start services using docker-compose (builds images if necessary)
+                    sh "docker-compose -f ${pipelineDirectory}/docker-compose.yaml up -d"
+                }
+            }
+        }
+
+        stage('Apply Kubernetes Manifests') {
+            when {
+                expression { fileExists("${pipelineDirectory}/k8s") }  // Only if Kubernetes manifests exist
+            }
+            steps {
+                script {
+                    // Apply Kubernetes manifests (if using Kubernetes)
+                    sh "kubectl apply -f ${pipelineDirectory}/k8s"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up containers after deployment
+            sh 'docker-compose down'
+        }
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}

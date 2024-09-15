@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package query;
+
+service QueryService {
+  rpc ExecuteQuery(QueryRequest) returns (QueryResponse);
+}
+
+message QueryRequest {
+  string sql_query = 1;
+}
+
+message QueryResponse {
+  repeated string results = 1;
+}

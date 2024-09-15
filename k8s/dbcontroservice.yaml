@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbcontrolservice
+  labels:
+    app: dbcontrolservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbcontrolservice
+  template:
+    metadata:
+      labels:
+        app: dbcontrolservice
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: server
+        image: onryaman/dbcontrolservice
+        ports:
+        - containerPort: 5000
+        - containerPort: 50055
+        env:
+        - name: MYSQL_HOST
+          value: mysql
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: microservices
+        - name: MYSQL_USER
+          value: microserviceuser
+        - name: MYSQL_PASSWORD
+          value: microservicepassword
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbcontrolservice
+  labels:
+    app: dbcontrolservice
+spec:
+  type: ClusterIP
+  selector:
+    app: dbcontrolservice
+  ports:
+  - name: grpc
+    port: 50055
+    targetPort: 50055
+  - name: http
+    port: 5000
+    targetPort: 5000
