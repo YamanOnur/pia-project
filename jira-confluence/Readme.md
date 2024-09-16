@@ -31,7 +31,7 @@ This guide outlines the steps to restore Jira & Confluence data from a backup us
   cd /var/atlassian/application-data/jira/import
   ls
 
-- When the setup wizard prompts for the backup, ensure you select first_backup.zip, which contains the necessary XML files:
+- When the setup wizard prompts for the backup, ensure you select final_backup.zip, which contains the necessary XML files:
 
   ```bash
   /var/atlassian/application-data/jira/import/final_jira_backup.zip
@@ -39,7 +39,7 @@ This guide outlines the steps to restore Jira & Confluence data from a backup us
 - Copy the backup file to the Confluence container, replace your actual path of confluence backup file
 
   ```bash
-  docker cp C:\Users\onur\final_confluence_backup.zip confluence:/var/atlassian/application-data/confluence/restore/site
+  docker cp C:\Users\onur\final_confluence_backup-2024-09-15-14-41-30-617.xml.zip confluence:/var/atlassian/application-data/confluence/restore/site
 
 - Verify that the file is indeed in the correct location. You can do this by accessing the Confluence container and listing the files:
 
