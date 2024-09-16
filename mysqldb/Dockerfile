@@ -1,5 +1,5 @@
-# Use the official MySQL 5.7 image
-FROM mysql:5.7
+# Use the official MySQL 8.0 image
+FROM mysql:8.0
 
 # Set environment variable for MySQL root password
 ENV MYSQL_ROOT_PASSWORD=rootpassword
