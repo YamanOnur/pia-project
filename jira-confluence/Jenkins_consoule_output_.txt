@@ -1,0 +1,158 @@
+Started by user onur ymn
+Checking out git git@github.com:YamanOnur/pipeline_scripts.git into /var/jenkins_home/workspace/pia-project_master@script/1f0437784b2290b185326100e122c9556128916664e916cb98d7671ca13af224 to read pia-project/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/pia-project_master@script/1f0437784b2290b185326100e122c9556128916664e916cb98d7671ca13af224/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:YamanOnur/pipeline_scripts.git # timeout=10
+Fetching upstream changes from git@github.com:YamanOnur/pipeline_scripts.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git fetch --tags --force --progress -- git@github.com:YamanOnur/pipeline_scripts.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 0afb6d6e758780f218789c879c820514acc6aa80 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0afb6d6e758780f218789c879c820514acc6aa80 # timeout=10
+Commit message: "Update frontend.yaml"
+ > git rev-list --no-walk f8f95ab48d665bb7355f6b3af09b1ef8308cfa1e # timeout=10
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/pia-project_master
+[Pipeline] {
+ > git rev-parse --resolve-git-dir /var/jenkins_home/caches/git-c835d2a3e9227636703026fe9b97c96e/.git # timeout=10
+Setting origin to git@github.com:YamanOnur/pia-project.git
+ > git config remote.origin.url git@github.com:YamanOnur/pia-project.git # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git config --get remote.origin.url # timeout=10
+ > git fetch --tags --force --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/master
+Seen 1 remote branch
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/pia-project_master/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:YamanOnur/pia-project.git # timeout=10
+Fetching without tags
+Fetching upstream changes from git@github.com:YamanOnur/pia-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2'
+ > git fetch --no-tags --force --progress -- git@github.com:YamanOnur/pia-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Checking out Revision 2a89acf61ff47a3da1e1426d2504ae69b1207d7f (master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 2a89acf61ff47a3da1e1426d2504ae69b1207d7f # timeout=10
+Commit message: "image changed"
+ > git rev-list --no-walk 2a89acf61ff47a3da1e1426d2504ae69b1207d7f # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Update Pipeline)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts fetch
+From github.com:YamanOnur/pipeline_scripts
+   f8f95ab..0afb6d6  master     -> origin/master
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts checkout master
+Already on 'master'
+Your branch is behind 'origin/master' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+[Pipeline] sh
++ git -C /var/jenkins_home/pipeline_scripts reset --hard origin/master
+HEAD is now at 0afb6d6 Update frontend.yaml
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Start Docker Compose)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker-compose -f /var/jenkins_home/pipeline_scripts/pia-project/docker-compose.yaml up -d
+pia-project_adservice_1 is up-to-date
+pia-project_mysql_1 is up-to-date
+pia-project_productcatalogservice_1 is up-to-date
+pia-project_currencyservice_1 is up-to-date
+pia-project_redis-cart_1 is up-to-date
+pia-project_cartservice_1 is up-to-date
+pia-project_paymentservice_1 is up-to-date
+pia-project_emailservice_1 is up-to-date
+pia-project_shippingservice_1 is up-to-date
+pia-project_dbcontrolservice_1 is up-to-date
+pia-project_recommendationservice_1 is up-to-date
+pia-project_checkoutservice_1 is up-to-date
+pia-project_frontend_1 is up-to-date
+pia-project_loadgenerator_1 is up-to-date
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply Kubernetes Manifests)
+[Pipeline] fileExists
+[Pipeline] sh
++ find /var/jenkins_home/pipeline_scripts/pia-project/k8s -name *.yaml -o -name *.yml
++ grep -q .
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ kubectl apply -f /var/jenkins_home/pipeline_scripts/pia-project/k8s
+deployment.apps/adservice created
+service/adservice created
+deployment.apps/cartservice created
+deployment.apps/redis-cart created
+service/cartservice created
+service/redis-cart created
+deployment.apps/checkoutservice created
+service/checkoutservice created
+deployment.apps/currencyservice created
+service/currencyservice created
+deployment.apps/dbcontrolservice created
+service/dbcontrolservice created
+deployment.apps/emailservice created
+service/emailservice created
+deployment.apps/frontend created
+service/frontend created
+deployment.apps/loadgenerator created
+deployment.apps/mysql created
+persistentvolumeclaim/mysql-pvc unchanged
+configmap/mysql-init-sql unchanged
+service/mysql created
+deployment.apps/paymentservice created
+service/paymentservice created
+deployment.apps/productcatalogservice created
+service/productcatalogservice created
+deployment.apps/recommendationservice created
+service/recommendationservice created
+deployment.apps/shippingservice created
+service/shippingservice created
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
++ docker-compose down
+Removing network pia-project_master_microservices-demo-network
+Network pia-project_master_microservices-demo-network not found.
+[Pipeline] echo
+Deployment successful!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
