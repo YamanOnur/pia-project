@@ -23,11 +23,11 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: rootpassword
         - name: MYSQL_DATABASE
-          value: microservices
+          value: dbcontrolservice_db
         - name: MYSQL_USER
-          value: microserviceuser
+          value: root
         - name: MYSQL_PASSWORD
-          value: microservicepassword
+          value: rootpassword
         volumeMounts:
         - name: mysql-data
           mountPath: /var/lib/mysql
