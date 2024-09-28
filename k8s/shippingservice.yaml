@@ -29,11 +29,11 @@ spec:
         - name: MYSQL_PORT
           value: "3306"
         - name: MYSQL_DATABASE
-          value: microservices
+          value: shippingservice_db
         - name: MYSQL_USER
-          value: microserviceuser
+          value: shipping_user
         - name: MYSQL_PASSWORD
-          value: microservicepassword
+          value: shippingpassword
         readinessProbe:
           periodSeconds: 5
           grpc:

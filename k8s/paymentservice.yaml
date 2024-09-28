@@ -30,11 +30,11 @@ spec:
         - name: MYSQL_PORT
           value: "3306"
         - name: MYSQL_DATABASE
-          value: microservices
+          value: paymentservice_db
         - name: MYSQL_USER
-          value: microserviceuser
+          value: payment_user
         - name: MYSQL_PASSWORD
-          value: microservicepassword
+          value: paymentpassword
         readinessProbe:
           grpc:
             port: 50051

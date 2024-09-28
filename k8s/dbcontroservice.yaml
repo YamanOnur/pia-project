@@ -27,11 +27,11 @@ spec:
         - name: MYSQL_PORT
           value: "3306"
         - name: MYSQL_DATABASE
-          value: microservices
+          value: dbcontrolservice_db
         - name: MYSQL_USER
-          value: microserviceuser
+          value: root
         - name: MYSQL_PASSWORD
-          value: microservicepassword
+          value: rootpassword
 ---
 apiVersion: v1
 kind: Service
@@ -40,7 +40,7 @@ metadata:
   labels:
     app: dbcontrolservice
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: dbcontrolservice
   ports:
@@ -50,3 +50,4 @@ spec:
   - name: http
     port: 5000
     targetPort: 5000
+    nodePort: 30002
